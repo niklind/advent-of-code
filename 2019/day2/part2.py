@@ -1,16 +1,19 @@
 import typing
 
 
-def int_code(file: str):
+def parse_data(file: str):
     with open(file, 'r') as file:
-        raw = list(file.read().split(","))
-        program = [int(position) for position in raw]
-        for noun in range(0, 99):
-            for verb in range(0, 99):
-                restored_program = restore(noun, verb, program.copy())
-                computed = compute(restored_program)
-                if computed[0] == 19690720:
-                    return computed
+        program = list(file.read().split(","))
+        return [int(position) for position in program]
+
+
+def int_code(program: typing.List[int]):
+    for noun in range(0, 99):
+        for verb in range(0, 99):
+            restored_program = restore(noun, verb, program.copy())
+            computed = compute(restored_program)
+            if computed[0] == 19690720:
+                return computed
 
 
 def restore(noun: int, verb: int, program: typing.List[int]):
@@ -20,26 +23,24 @@ def restore(noun: int, verb: int, program: typing.List[int]):
 
 
 def compute(program: typing.List[int]):
-    pos = 0
-    while len(program) > pos:
-        opcode = program[pos]
+    for index in range(0, len(program), 4):
+        opcode = program[index]
         if opcode == 99:
             return program
 
-        first = program[pos + 1]
-        second = program[pos + 2]
-        store_at = program[pos + 3]
+        first = program[index + 1]
+        second = program[index + 2]
+        store_at = program[index + 3]
 
         if opcode == 1:
             program[store_at] = program[first] + program[second]
         elif opcode == 2:
             program[store_at] = program[first] * program[second]
 
-        pos += 4
-
     return program
 
 
 if __name__ == "__main__":
-    result = int_code('input.txt')
+    data = parse_data('input.txt')
+    result = int_code(data)
     print("Result: " + str(result[1]) + str(result[2]))  # 2254

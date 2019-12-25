@@ -1,7 +1,13 @@
-def total_fuel_requirement(file: str):
+from typing import List
+
+
+def parse_data(file: str):
     with open(file, 'r') as file:
-        masses = [int(line) for line in file]
-        return sum([fuel_requirement(mass) for mass in masses])
+        return [int(line) for line in file]
+
+
+def total_fuel_requirement(masses: List[int]):
+    return sum([fuel_requirement(mass) for mass in masses])
 
 
 def fuel_requirement(mass: int):
@@ -9,5 +15,6 @@ def fuel_requirement(mass: int):
 
 
 if __name__ == "__main__":
-    result = total_fuel_requirement('input.txt')
+    data = parse_data('input.txt')
+    result = total_fuel_requirement(data)
     print("Result: " + str(result))  # 3278434
