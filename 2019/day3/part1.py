@@ -1,0 +1,59 @@
+def parse_data(file: str):
+    with open(file, 'r') as file:
+        wire1 = list(file.readline().split(","))
+        wire2 = list(file.readline().split(","))
+        return [wire1, wire2]
+
+
+def manhattan_distance(wire1, wire2):
+    wire1_path = calculate_path(wire1)
+    wire2_path = calculate_path(wire2)
+    intersections = find_intersections(wire1_path, wire2_path)
+    return calculate_min_distance(intersections)
+
+
+def calculate_path(wire):
+    visited_points = set()
+    x = 0
+    y = 0
+    for vector in wire:
+        direction = vector[0]
+        length = int(vector[1:])
+
+        x_diff = 0
+        y_diff = 0
+
+        if direction == 'L':
+            x_diff = -1
+        elif direction == 'R':
+            x_diff = 1
+        elif direction == 'U':
+            y_diff = 1
+        elif direction == 'D':
+            y_diff = -1
+
+        for _ in range(0, length):
+            x += x_diff
+            y += y_diff
+            visited_points.add((x, y))
+
+    return visited_points
+
+
+def find_intersections(wire1, wire2):
+    return wire1.intersection(wire2)
+
+
+def calculate_min_distance(intersections):
+    distances = [calculate_distance(intersection) for intersection in intersections]
+    return min(distances)
+
+
+def calculate_distance(intersection):
+    return abs(intersection[0]) + abs(intersection[1])
+
+
+if __name__ == "__main__":
+    data = parse_data('input.txt')
+    result = manhattan_distance(data[0], data[1])
+    print("Result: " + str(result))  # 221
