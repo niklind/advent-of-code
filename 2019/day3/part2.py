@@ -58,4 +58,4 @@ def calculate_min_distance(intersections):
 if __name__ == "__main__":
     data = parse_data('input.txt')
     result = manhattan_distance(data[0], data[1])
-    print("Result: " + str(result))  # 221
+    print("Result: " + str(result))  # 18542
