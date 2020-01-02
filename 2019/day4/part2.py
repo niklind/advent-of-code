@@ -4,7 +4,7 @@ def parse_data(file: str):
         return int(interval[0]), int(interval[1])
 
 
-def find_valid_passwords(low, high):
+def find_valid_passwords(low, high):  # TODO: use generating function instead of loop
     valid_passwords = []
     for password in range(low, high + 1):
         if validate_password(password):

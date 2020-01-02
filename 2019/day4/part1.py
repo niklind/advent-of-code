@@ -34,4 +34,4 @@ def validate_password(password):
 if __name__ == "__main__":
     low, high = parse_data('input.txt')
     result = find_valid_passwords(low, high)
-    print("Result: " + str(result))
+    print("Result: " + str(result))  # 466
