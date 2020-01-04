@@ -27,7 +27,7 @@ def find_orbits(relations):
     for relation in relations:
         child, parent = parse_relation(relation)
         add_orbit(child, parent, nodes)
-    return count_orbits(nodes)
+    return count_orbital_transfers(nodes['YOU'], nodes['SAN'])
 
 
 def parse_relation(line):
@@ -46,28 +46,31 @@ def add_orbit(current, parent, nodes):
     nodes[parent] = parent_node
 
 
-def count_orbits(nodes):
-    root = find_root(nodes)
-    return count(root, 0)
+def count_orbital_transfers(origin, destination):
+    steps = 0
+    current = origin.parent
+    while True:
+        depth = has_child(current, destination, 0)
+        if depth > -1:
+            return steps + depth
+        current = current.parent
+        steps += 1
 
 
-def find_root(nodes):
-    for key, value in nodes.items():
-        if not value.parent:
-            return value
-
-
-def count(node, depth):
-    orbits = depth
-    if not node.children:
+def has_child(current, destination, depth):
+    if destination in current.children:
         return depth
 
-    for child in node.children:
-        orbits += count(child, depth + 1)
-    return orbits
+    depth += 1
+    for child in current.children:
+        temp = has_child(child, destination, depth)
+        if temp > -1:
+            return temp
+
+    return -1
 
 
 if __name__ == "__main__":
     data = parse_data('input.txt')
     result = find_orbits(data)
-    print("Result: " + str(result))  # 453028
+    print("Result: " + str(result))  # 562
