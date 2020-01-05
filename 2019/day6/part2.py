@@ -17,8 +17,8 @@ class Node(object):
         self.children.append(node)
 
 
-def parse_data(file: str):
-    with open(file, 'r') as file:
+def parse_data(file_name):
+    with open(file_name, 'r') as file:
         return [line.strip("\n") for line in file]
 
 

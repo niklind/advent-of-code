@@ -1,13 +1,10 @@
-import typing
-
-
-def parse_data(file: str):
-    with open(file, 'r') as file:
+def parse_data(file_name):
+    with open(file_name, 'r') as file:
         program = list(file.read().split(","))
         return [int(position) for position in program]
 
 
-def int_code(program: typing.List[int], input_code: int):
+def int_code(program, input_code):
     index = 0
     while index < len(program)-1:
         modes, opcode = read_instructions(index, program)

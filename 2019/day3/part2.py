@@ -1,5 +1,5 @@
-def parse_data(file: str):
-    with open(file, 'r') as file:
+def parse_data(file_name):
+    with open(file_name, 'r') as file:
         wire1 = list(file.readline().split(","))
         wire2 = list(file.readline().split(","))
         return wire1, wire2

@@ -1,13 +1,10 @@
-import typing
-
-
-def parse_data(file: str):
-    with open(file, 'r') as file:
+def parse_data(file_name):
+    with open(file_name, 'r') as file:
         program = list(file.read().split(","))
         return [int(position) for position in program]
 
 
-def int_code(program: typing.List[int]):
+def int_code(program):
     for noun in range(0, 99):
         for verb in range(0, 99):
             restored_program = restore(noun, verb, program.copy())
@@ -16,13 +13,13 @@ def int_code(program: typing.List[int]):
                 return computed
 
 
-def restore(noun: int, verb: int, program: typing.List[int]):
+def restore(noun, verb, program):
     program[1] = noun
     program[2] = verb
     return program
 
 
-def compute(program: typing.List[int]):
+def compute(program):
     for index in range(0, len(program), 4):
         opcode = program[index]
         if opcode == 99:

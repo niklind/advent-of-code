@@ -1,14 +1,43 @@
+import itertools
+
+
 def parse_data(file_name):
     with open(file_name, 'r') as file:
         program = list(file.read().split(","))
         return [int(position) for position in program]
 
 
-def int_code(program, input_code):
-    index = 0
-    diagnostic_code = 0
-    while index < len(program)-1:
+def amplifier_combinations(program):
+    phases = [5, 6, 7, 8, 9]
+    maximum_signal = 0
+    for phase_setting in itertools.permutations(phases):
+        maximum_signal = max(maximum_signal, amplifier(program.copy(), phase_setting))
+    return maximum_signal
+
+
+def amplifier(program, phase_settings):
+    output = 0
+    program_states = {}
+    completed = False
+    while not completed:
+        for index in range(0, 5):
+            input_program, input_position, input_codes = program_states.get(index, (program.copy(), 0, [phase_settings[index]]))
+            input_codes.append(output)
+            output_program, output_position, output = int_code(input_program, input_position, input_codes)
+            program_states[index] = (output_program, output_position, input_codes)
+            if output_position == 0:
+                completed = True
+
+    return output
+
+
+def int_code(program, index, input_codes):
+    diagnostic_code = input_codes[0]
+    while index < len(program) - 1:
         modes, opcode = read_instructions(index, program)
+
+        if opcode == 99:
+            return program, 0, diagnostic_code
 
         offset_1 = value(modes[0], index + 1, program)
         offset_2 = value(modes[1], index + 2, program)
@@ -21,11 +50,12 @@ def int_code(program, input_code):
             program[offset_3] = program[offset_1] * program[offset_2]
             index += 4
         elif opcode == 3:
-            program[offset_1] = input_code
+            program[offset_1] = input_codes.pop(0)
             index += 2
         elif opcode == 4:
             diagnostic_code = program[offset_1]
             index += 2
+            return program, index, diagnostic_code
         elif opcode == 5:
             if program[offset_1] != 0:
                 index = program[offset_2]
@@ -48,10 +78,8 @@ def int_code(program, input_code):
             else:
                 program[offset_3] = 0
             index += 4
-        elif opcode == 99:
-            return diagnostic_code
 
-    return diagnostic_code
+    return program, index, diagnostic_code
 
 
 def read_instructions(index, program):
@@ -70,5 +98,5 @@ def value(mode, number, program):
 
 if __name__ == "__main__":
     data = parse_data('input.txt')
-    result = int_code(data, 5)
-    print("Result: " + str(result))  # 2808771
+    result = amplifier_combinations(data)
+    print("Result: " + str(result))  # 19581200
